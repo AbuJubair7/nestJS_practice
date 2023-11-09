@@ -1,26 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { StudentDto } from './student.dto';
 
 @Injectable()
 export class StudentService {
-  private name: string;
-  private id: string;
-  private cgpa: string;
-  setName(name: string) {
-    this.name = name;
+  private students = [];
+
+  createStudent(data: StudentDto) {
+    this.students.push(data);
   }
-  setId(id: string) {
-    this.id = id;
+  getAllStudent() {
+    return this.students;
   }
-  setCgpa(cgpa: string) {
-    this.cgpa = cgpa;
+
+  findStudent(id: string) {
+    const data = this.students.find((st) => {
+      return st.id === id;
+    });
+    console.log(data);
+    if (!data) throw new NotFoundException('Student data not available');
+    return data;
   }
-  getName(): string {
-    return this.name;
-  }
-  getId(): string {
-    return this.id;
-  }
-  getCgpa(): string {
-    return this.cgpa;
-  }
+  // student id - > get info
+  // information create new student
+  // student id - > delete info
 }
