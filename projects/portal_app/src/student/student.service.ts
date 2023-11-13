@@ -1,26 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { StudentDto } from './student.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Student } from 'src/entities/student.entity';
+import { Repository } from 'typeorm';
+import { StudentDto } from './dto/student.dto';
 
 @Injectable()
 export class StudentService {
-  private students = [];
+  constructor(
+    @InjectRepository(Student)
+    private readonly studentRepo: Repository<Student>,
+  ) {}
 
-  createStudent(data: StudentDto) {
-    this.students.push(data);
-  }
-  getAllStudent() {
-    return this.students;
+  async getAllStudent() {
+    return await this.studentRepo.find();
   }
 
-  findStudent(id: string) {
-    const data = this.students.find((st) => {
-      return st.id === id;
-    });
-    console.log(data);
-    if (!data) throw new NotFoundException('Student data not available');
-    return data;
+  async getStudent(id: number) {
+    const student = await this.studentRepo.findOne({ where: { id: id } });
+    if (student) return student;
+    throw new NotFoundException('Student no found with id: ' + id);
   }
-  // student id - > get info
-  // information create new student
-  // student id - > delete info
+
+  async updateStudent(id: number, data: StudentDto) {
+    return await this.studentRepo.update(id, data);
+  }
+
+  async deleteStudent(id: number) {
+    return await this.studentRepo.delete(id);
+  }
 }
