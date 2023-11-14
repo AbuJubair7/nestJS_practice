@@ -16,7 +16,7 @@ export class AuthService {
   async createStudent(data: AuthDto) {
     console.log(data);
 
-    const user = this.studentRepo.create(data);
+    const user = await this.studentRepo.create(data);
     return await this.studentRepo.save(user);
   }
 

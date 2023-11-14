@@ -18,7 +18,7 @@ export class StudentService {
   async getStudent(id: number) {
     const student = await this.studentRepo.findOne({ where: { id: id } });
     if (student) return student;
-    throw new NotFoundException('Student no found with id: ' + id);
+    throw new NotFoundException('No student found with id: ' + id);
   }
 
   async updateStudent(id: number, data: StudentDto) {
